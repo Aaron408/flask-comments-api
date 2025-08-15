@@ -2,9 +2,9 @@ name: Security and Quality Pipeline
 
 on:
   push:
-    branches: [ main, production, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, production ]
+    branches: [ main ]
   schedule:
     # Ejecutar análisis de seguridad semanalmente
     - cron: '0 0 * * 0'
