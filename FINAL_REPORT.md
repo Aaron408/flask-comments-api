@@ -49,32 +49,32 @@ Este reporte documenta la implementación de una API RESTful desarrollada en **d
 
 ### 🚀 Performance y Escalabilidad
 
-| Métrica | Node.js + Vercel | Python + Google Cloud | Diferencia |
-|---------|------------------|------------------------|------------|
-| **Cold Start** | ~50ms | ~2-3 segundos | **60x más rápido** |
-| **Response Time** | ~20ms | ~100ms | **5x más rápido** |
-| **Memory Usage** | ~50MB | ~120MB | **2.4x menos memoria** |
-| **Concurrency** | 1000+ req/s | 100+ req/s | **10x más concurrent** |
-| **Global Distribution** | 40+ edge locations | 20+ regiones | **2x mejor cobertura** |
+| Métrica                 | Node.js + Vercel   | Python + Google Cloud | Diferencia             |
+| ----------------------- | ------------------ | --------------------- | ---------------------- |
+| **Cold Start**          | ~50ms              | ~2-3 segundos         | **60x más rápido**     |
+| **Response Time**       | ~20ms              | ~100ms                | **5x más rápido**      |
+| **Memory Usage**        | ~50MB              | ~120MB                | **2.4x menos memoria** |
+| **Concurrency**         | 1000+ req/s        | 100+ req/s            | **10x más concurrent** |
+| **Global Distribution** | 40+ edge locations | 20+ regiones          | **2x mejor cobertura** |
 
 ### 💰 Análisis de Costos (Mensual)
 
-| Concepto | Node.js + Vercel | Python + Google Cloud | Ahorro |
-|----------|------------------|------------------------|---------|
-| **Hosting** | $0 (hasta 100GB) | ~$5-15 | **$15/mes** |
-| **Build Minutes** | Ilimitado | ~$1-3 | **$3/mes** |
-| **Bandwidth** | 100GB gratis | ~$2-5 | **$5/mes** |
-| **Storage** | Incluido | ~$1-2 | **$2/mes** |
-| **Total Estimado** | **$0-5/mes** | **$10-25/mes** | **$20/mes** |
+| Concepto           | Node.js + Vercel | Python + Google Cloud | Ahorro      |
+| ------------------ | ---------------- | --------------------- | ----------- |
+| **Hosting**        | $0 (hasta 100GB) | ~$5-15                | **$15/mes** |
+| **Build Minutes**  | Ilimitado        | ~$1-3                 | **$3/mes**  |
+| **Bandwidth**      | 100GB gratis     | ~$2-5                 | **$5/mes**  |
+| **Storage**        | Incluido         | ~$1-2                 | **$2/mes**  |
+| **Total Estimado** | **$0-5/mes**     | **$10-25/mes**        | **$20/mes** |
 
 ### ⏱️ Tiempo de Desarrollo
 
-| Fase | Node.js + Vercel | Python + Google Cloud | Diferencia |
-|------|------------------|------------------------|------------|
-| **Setup Inicial** | 5 minutos | 45 minutos | **9x más rápido** |
-| **Primer Deploy** | 2 minutos | 15 minutos | **7.5x más rápido** |
-| **Configuración CI/CD** | 10 minutos | 30 minutos | **3x más rápido** |
-| **Total Time-to-Market** | **17 minutos** | **90 minutos** | **5.3x más rápido** |
+| Fase                     | Node.js + Vercel | Python + Google Cloud | Diferencia          |
+| ------------------------ | ---------------- | --------------------- | ------------------- |
+| **Setup Inicial**        | 5 minutos        | 45 minutos            | **9x más rápido**   |
+| **Primer Deploy**        | 2 minutos        | 15 minutos            | **7.5x más rápido** |
+| **Configuración CI/CD**  | 10 minutos       | 30 minutos            | **3x más rápido**   |
+| **Total Time-to-Market** | **17 minutos**   | **90 minutos**        | **5.3x más rápido** |
 
 ## 🔧 Implementaciones Técnicas
 
@@ -90,7 +90,7 @@ const stack = {
     linting: 'ESLint',
     deployment: 'Vercel Serverless Functions',
     cicd: 'GitHub Actions',
-    monitoring: 'Vercel Analytics'
+    monitoring: 'Vercel Analytics',
 };
 ```
 
@@ -115,13 +115,13 @@ stack = {
 
 ### Cobertura de Tests
 
-| Tipo de Test | Node.js Implementation | Python Implementation |
-|--------------|----------------------|----------------------|
-| **Unit Tests** | ✅ 15 tests con Jest | ✅ 12 tests con pytest |
+| Tipo de Test          | Node.js Implementation     | Python Implementation      |
+| --------------------- | -------------------------- | -------------------------- |
+| **Unit Tests**        | ✅ 15 tests con Jest       | ✅ 12 tests con pytest     |
 | **Integration Tests** | ✅ API endpoints completos | ✅ API endpoints completos |
-| **Performance Tests** | ✅ Load testing incluido | ⚠️ Básico |
-| **Security Tests** | ✅ Helmet.js + validación | ✅ Validación básica |
-| **Coverage** | **95%+** | **90%+** |
+| **Performance Tests** | ✅ Load testing incluido   | ⚠️ Básico                  |
+| **Security Tests**    | ✅ Helmet.js + validación  | ✅ Validación básica       |
+| **Coverage**          | **95%+**                   | **90%+**                   |
 
 ### Scripts de Testing
 
@@ -145,14 +145,14 @@ python -m pytest --cov=app
 ```yaml
 # Más eficiente - 3-5 minutos total
 jobs:
-  test: # 1-2 minutos
-    - npm ci
-    - npm test
-    - npm run lint
-  
-  deploy: # 1-2 minutos
-    - vercel deploy
-    - integration tests
+    test: # 1-2 minutos
+        - npm ci
+        - npm test
+        - npm run lint
+
+    deploy: # 1-2 minutos
+        - vercel deploy
+        - integration tests
 ```
 
 ### Workflow Python + Google Cloud
@@ -160,15 +160,15 @@ jobs:
 ```yaml
 # Más tiempo - 8-12 minutos total
 jobs:
-  test: # 3-4 minutos
-    - pip install
-    - pytest
-    - flake8
-  
-  build-deploy: # 5-8 minutos
-    - docker build
-    - push to artifact registry
-    - deploy to cloud run
+    test: # 3-4 minutos
+        - pip install
+        - pytest
+        - flake8
+
+    build-deploy: # 5-8 minutos
+        - docker build
+        - push to artifact registry
+        - deploy to cloud run
 ```
 
 ## 🤔 Análisis de Ventajas y Desventajas
@@ -176,21 +176,25 @@ jobs:
 ### ✅ Ventajas del Enfoque Node.js + Vercel
 
 #### **Performance**
+
 - **Cold starts ultra-rápidos**: ~50ms vs 2-3s
 - **Mejor throughput**: 1000+ requests/s
 - **Edge computing**: Distributed globally
 
 #### **Desarrollo**
+
 - **Zero-config deployment**: Push y deploy automático
 - **Hot reload**: Cambios instantáneos
 - **Rich ecosystem**: NPM packages abundantes
 
 #### **Costos**
+
 - **Tier gratuito generoso**: 100GB/mes, functions ilimitadas
 - **Pay-per-use real**: Solo pagas lo que usas
 - **No infrastructure overhead**: Sin gestión de servidores
 
 #### **Developer Experience**
+
 - **Setup simplificado**: 5 minutos vs 45 minutos
 - **Debugging mejor**: Logs en tiempo real
 - **Preview deployments**: Para cada PR
@@ -198,16 +202,19 @@ jobs:
 ### ✅ Ventajas del Enfoque Python + Google Cloud
 
 #### **Flexibilidad**
+
 - **Container-based**: Más control del environment
 - **Multi-service**: Mejor para microservicios complejos
 - **Database options**: Más opciones de storage
 
 #### **Enterprise Features**
+
 - **Advanced networking**: VPC, private endpoints
 - **Compliance**: Más certificaciones
 - **Monitoring**: Suite completa de observability
 
 #### **Ecosystem Python**
+
 - **Data science integration**: Pandas, NumPy, etc.
 - **ML/AI libraries**: TensorFlow, PyTorch
 - **Scientific computing**: Mejor para análisis complejos
@@ -215,11 +222,13 @@ jobs:
 ### ❌ Desventajas del Enfoque Node.js + Vercel
 
 #### **Limitaciones Técnicas**
+
 - **Function timeout**: 10s en free tier
 - **Memory limits**: 1GB máximo
 - **Vendor lock-in**: Specific to Vercel
 
 #### **Escalabilidad**
+
 - **Database**: SQLite no es production-ready
 - **File storage**: No persistent storage
 - **Complex workflows**: Limitado para pipelines complejos
@@ -227,11 +236,13 @@ jobs:
 ### ❌ Desventajas del Enfoque Python + Google Cloud
 
 #### **Complejidad**
+
 - **Setup overhead**: Configuración extensa
 - **Infrastructure management**: Más moving parts
 - **Cost predictability**: Más difícil de estimar
 
 #### **Performance**
+
 - **Cold starts lentos**: Especialmente problematic para APIs
 - **Resource overhead**: Containers son más pesados
 - **Latency**: Sin edge computing por defecto
@@ -241,11 +252,13 @@ jobs:
 ### 1. **Serverless Frameworks**
 
 #### **AWS Lambda + API Gateway**
+
 - ✅ **Pro**: Ecosystem maduro, integración nativa
 - ❌ **Con**: Setup más complejo, cold starts lentos para Python
 - 🏆 **Veredicto**: Bueno para enterprise, overkill para prototipos
 
 #### **Netlify Functions**
+
 - ✅ **Pro**: Simple como Vercel, buen tier gratuito
 - ❌ **Con**: Menos features, menor ecosystem
 - 🏆 **Veredicto**: Alternativa válida a Vercel
@@ -253,11 +266,13 @@ jobs:
 ### 2. **Traditional Hosting**
 
 #### **Heroku**
+
 - ✅ **Pro**: Simple, postgres incluido
 - ❌ **Con**: Más caro ($7/mes+), dyno sleeping
 - 🏆 **Veredicto**: Good for MVPs, expensive long-term
 
 #### **Railway/Render**
+
 - ✅ **Pro**: Moderno, buen pricing
 - ❌ **Con**: Menos mature que Vercel
 - 🏆 **Veredicto**: Prometedor para el futuro
@@ -265,11 +280,13 @@ jobs:
 ### 3. **Container Platforms**
 
 #### **Google Cloud Run**
+
 - ✅ **Pro**: Flexible, good scaling
 - ❌ **Con**: Cold starts, más complejo
 - 🏆 **Veredicto**: Mejor para workloads más complejos
 
 #### **Azure Container Instances**
+
 - ✅ **Pro**: Integración Microsoft ecosystem
 - ❌ **Con**: Menos features que competitors
 - 🏆 **Veredicto**: Specific use cases
@@ -279,6 +296,7 @@ jobs:
 ### Para Diferentes Escenarios
 
 #### **1. Prototipo/MVP Rápido** 🏆
+
 ```
 ✅ Node.js + Vercel
 - Time to market: <1 hora
@@ -287,6 +305,7 @@ jobs:
 ```
 
 #### **2. Startup Growth Stage**
+
 ```
 ✅ Node.js + Vercel + Vercel Postgres
 - Escalabilidad: Excelente
@@ -295,6 +314,7 @@ jobs:
 ```
 
 #### **3. Enterprise Application**
+
 ```
 ✅ Node.js + AWS Lambda + RDS
 - Control: Máximo
@@ -303,6 +323,7 @@ jobs:
 ```
 
 #### **4. Data-Heavy Application**
+
 ```
 ✅ Python + Google Cloud Run + CloudSQL
 - Data processing: Superior
@@ -311,6 +332,7 @@ jobs:
 ```
 
 #### **5. Multi-Service Architecture**
+
 ```
 ✅ Kubernetes + Docker
 - Orchestration: Completa
@@ -352,58 +374,62 @@ microservices-app/
 name: Deploy Comments Service Only
 
 on:
-  push:
-    paths:
-      - 'services/comments/**'
-      - 'shared/**'
-    branches: [main]
+    push:
+        paths:
+            - 'services/comments/**'
+            - 'shared/**'
+        branches: [main]
 
 jobs:
-  deploy-comments:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Deploy Comments to Vercel
-        working-directory: ./services/comments
-        run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} \
-                 --prod \
-                 --env NODE_ENV=production
+    deploy-comments:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Deploy Comments to Vercel
+              working-directory: ./services/comments
+              run: |
+                  vercel --token ${{ secrets.VERCEL_TOKEN }} \
+                         --prod \
+                         --env NODE_ENV=production
 ```
 
 #### **Ventajas del Enfoque Microservices + Vercel**
 
 ##### **1. Independent Deployment**
+
 - **Cada servicio** tiene su propio deployment pipeline
 - **Zero downtime** para otros servicios
 - **Rollback independiente** por servicio
 
 ##### **2. Technology Diversity**
+
 - **Comments Service**: Node.js + Express
-- **Users Service**: TypeScript + Fastify  
+- **Users Service**: TypeScript + Fastify
 - **Auth Service**: Python + FastAPI
 - **Notification Service**: Go + Gin
 
 ##### **3. Scaling Granular**
+
 ```javascript
 //Configuración por servicio
 const commentService = {
     memory: '512MB',
     timeout: '10s',
     regions: ['iad1', 'sfo1', 'fra1'], //Global
-    env: { DB_POOL_SIZE: '10' }
+    env: { DB_POOL_SIZE: '10' },
 };
 
 const userService = {
     memory: '1GB',
-    timeout: '30s', 
+    timeout: '30s',
     regions: ['iad1'], //Single region
-    env: { CACHE_SIZE: '100MB' }
+    env: { CACHE_SIZE: '100MB' },
 };
 ```
 
 ##### **4. Team Autonomy**
+
 - **Ownership clear**: Each team owns their service
 - **Tech stack freedom**: Choose best tool for the job
 - **Release cycles**: Independent velocity
@@ -411,12 +437,13 @@ const userService = {
 #### **Service Communication Strategy**
 
 ##### **API Gateway Pattern con Vercel**
+
 ```javascript
 //api-gateway/index.js
 const routes = {
     '/comments/*': 'https://comments-api.vercel.app',
-    '/users/*': 'https://users-api.vercel.app', 
-    '/auth/*': 'https://auth-api.vercel.app'
+    '/users/*': 'https://users-api.vercel.app',
+    '/auth/*': 'https://auth-api.vercel.app',
 };
 
 app.use('*', (req, res) => {
@@ -426,13 +453,14 @@ app.use('*', (req, res) => {
 ```
 
 ##### **Event-Driven Architecture**
+
 ```javascript
 //Usando Vercel's Edge Config para events
 const publishEvent = async (event) => {
     await fetch('https://api.vercel.com/v1/edge-config', {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ items: [{ key: event.id, value: event }] })
+        body: JSON.stringify({ items: [{ key: event.id, value: event }] }),
     });
 };
 
@@ -449,37 +477,39 @@ const handleCommentCreated = (event) => {
 ```json
 //services/comments/vercel.json
 {
-  "name": "comments-api",
-  "functions": {
-    "index.js": {
-      "maxDuration": 10,
-      "memory": 512,
-      "runtime": "nodejs18.x"
-    }
-  },
-  "env": {
-    "SERVICE_NAME": "comments",
-    "DATABASE_URL": "@comments-db-url",
-    "REDIS_URL": "@shared-redis-url"
-  },
-  "regions": ["iad1", "sfo1", "fra1"],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "function": "index.js"
-    }
-  ]
+    "name": "comments-api",
+    "functions": {
+        "index.js": {
+            "maxDuration": 10,
+            "memory": 512,
+            "runtime": "nodejs18.x"
+        }
+    },
+    "env": {
+        "SERVICE_NAME": "comments",
+        "DATABASE_URL": "@comments-db-url",
+        "REDIS_URL": "@shared-redis-url"
+    },
+    "regions": ["iad1", "sfo1", "fra1"],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "function": "index.js"
+        }
+    ]
 }
 ```
 
 ### **Consideraciones para Production**
 
 #### **1. State Management**
+
 - **Database per service**: Evitar shared databases
 - **Event sourcing**: Para consistencia eventual
 - **Saga pattern**: Para transacciones distribuidas
 
 #### **2. Monitoring y Observability**
+
 ```javascript
 //Distributed tracing setup
 const opentelemetry = require('@opentelemetry/api');
@@ -488,11 +518,12 @@ const { getNodeSDK } = require('@opentelemetry/auto-instrumentations-node');
 const sdk = getNodeSDK({
     serviceName: 'comments-service',
     traceExporter: new ConsoleSpanExporter(),
-    metricExporter: new PrometheusExporter()
+    metricExporter: new PrometheusExporter(),
 });
 ```
 
 #### **3. Security**
+
 - **Service-to-service auth**: JWT tokens
 - **API Gateway**: Rate limiting y authentication
 - **Network security**: Private networking donde sea posible
@@ -511,26 +542,29 @@ const sdk = getNodeSDK({
 
 #### **Métricas de Éxito**
 
-| KPI | Objetivo | Node.js Result | Python Result |
-|-----|----------|----------------|---------------|
-| **Time to Deploy** | <10 min | ✅ 5 min | ❌ 45 min |
-| **Cold Start** | <200ms | ✅ 50ms | ❌ 2-3s |
-| **Monthly Cost** | <$10 | ✅ $0-5 | ❌ $15-25 |
-| **Developer Satisfaction** | >8/10 | ✅ 9/10 | 🤔 7/10 |
+| KPI                        | Objetivo | Node.js Result | Python Result |
+| -------------------------- | -------- | -------------- | ------------- |
+| **Time to Deploy**         | <10 min  | ✅ 5 min       | ❌ 45 min     |
+| **Cold Start**             | <200ms   | ✅ 50ms        | ❌ 2-3s       |
+| **Monthly Cost**           | <$10     | ✅ $0-5        | ❌ $15-25     |
+| **Developer Satisfaction** | >8/10    | ✅ 9/10        | 🤔 7/10       |
 
 ### Lecciones Aprendidas
 
 #### **1. Technology Selection Impact**
+
 - **Runtime choice** afecta dramatically performance en serverless
 - **Platform optimization** es más importante que language features
 - **Developer experience** is a competitive advantage
 
 #### **2. Cloud-Native Development**
+
 - **Serverless-first** approach reduce operational overhead
 - **Edge computing** is becoming standard, not premium
 - **Pay-per-use** models favor sporadic workloads
 
 #### **3. CI/CD Evolution**
+
 - **Zero-config deployment** is the new standard
 - **Preview deployments** dramatically improve team velocity
 - **Integration testing** in production-like environments is crucial
@@ -538,18 +572,21 @@ const sdk = getNodeSDK({
 ### Próximos Pasos Recomendados
 
 #### **Fase 1: Consolidación (1-2 semanas)**
+
 - [x] ✅ Migration to Node.js completada
 - [x] ✅ Vercel deployment funcionando
 - [ ] 🔄 Database migration a Vercel Postgres
 - [ ] 🔄 Implementar authentication con NextAuth.js
 
 #### **Fase 2: Enhancement (1 mes)**
+
 - [ ] 📊 Implementar analytics con Vercel Analytics
 - [ ] 🔒 Security hardening y rate limiting
 - [ ] 📚 OpenAPI documentation generation
 - [ ] 🧪 E2E testing con Playwright
 
 #### **Fase 3: Scale (2-3 meses)**
+
 - [ ] 🏗️ Migrate to microservices architecture
 - [ ] 🌐 Implement API Gateway pattern
 - [ ] 📈 Advanced monitoring y alerting
@@ -558,18 +595,21 @@ const sdk = getNodeSDK({
 ### Impacto del Proyecto
 
 #### **Business Impact**
+
 - **60% reduction** en time-to-market
-- **80% cost savings** en operational expenses  
+- **80% cost savings** en operational expenses
 - **300% improvement** en developer productivity
 - **95% uptime** con zero-configuration monitoring
 
 #### **Technical Impact**
+
 - **Modern serverless architecture** establecida
 - **CI/CD best practices** implementadas
 - **Performance benchmarks** definidos
 - **Scalability foundation** para growth futuro
 
 #### **Learning Impact**
+
 - **Cloud-native development** expertise ganada
 - **Performance optimization** skills desarrolladas
 - **Cost optimization** strategies aplicadas
@@ -698,6 +738,7 @@ Python + Google Cloud: 🟡🟡🟡⚪⚪ (70/100)
 ### Commits Realizados
 
 El proyecto incluye más de 10 commits en la rama main cubriendo:
+
 - Configuración inicial del proyecto
 - Implementación de endpoints de la API
 - Creación de tests automatizados
@@ -827,21 +868,21 @@ Trigger: Push to main
 
 Para diferentes escenarios:
 
-1. **Para producción enterprise**: 
-   - Kubernetes en GKE/EKS
-   - PostgreSQL como base de datos
-   - Redis para caché
-   - Prometheus + Grafana para monitoring
+1. **Para producción enterprise**:
+    - Kubernetes en GKE/EKS
+    - PostgreSQL como base de datos
+    - Redis para caché
+    - Prometheus + Grafana para monitoring
 
 2. **Para startups**:
-   - Railway/Render para simplicidad
-   - PlanetScale para base de datos
-   - Sentry para error tracking
+    - Railway/Render para simplicidad
+    - PlanetScale para base de datos
+    - Sentry para error tracking
 
 3. **Para máximo control**:
-   - Terraform para Infrastructure as Code
-   - GitLab CI/CD para pipelines privados
-   - Self-hosted Kubernetes
+    - Terraform para Infrastructure as Code
+    - GitLab CI/CD para pipelines privados
+    - Self-hosted Kubernetes
 
 ## 🏢 Enfoque de Microservicios
 
@@ -878,28 +919,28 @@ Para desplegar únicamente el servicio de comentarios en un entorno de microserv
 name: Deploy Comments Service Only
 
 on:
-  push:
-    paths:
-      - 'services/comments/**'
-      - '.github/workflows/deploy-comments.yml'
-    branches: [main]
+    push:
+        paths:
+            - 'services/comments/**'
+            - '.github/workflows/deploy-comments.yml'
+        branches: [main]
 
 jobs:
-  deploy-comments:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Build Comments Service
-        run: |
-          cd services/comments
-          docker build -t comments-api .
-      
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy comments-api \
-            --image $IMAGE_URL \
-            --service-account comments-sa@project.iam
+    deploy-comments:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Build Comments Service
+              run: |
+                  cd services/comments
+                  docker build -t comments-api .
+
+            - name: Deploy to Cloud Run
+              run: |
+                  gcloud run deploy comments-api \
+                    --image $IMAGE_URL \
+                    --service-account comments-sa@project.iam
 ```
 
 #### 2. **Estrategia de Multi-repo**
@@ -952,6 +993,7 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
 ### Cumplimiento de Objetivos
 
 ✅ **Completamente logrado**: Todos los requisitos de la evaluación han sido implementados exitosamente, incluyendo:
+
 - API funcional con endpoints CRUD
 - Pipeline de CI/CD automatizado
 - Despliegue en servicios cloud

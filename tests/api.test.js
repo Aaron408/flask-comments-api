@@ -2,11 +2,10 @@ const request = require('supertest');
 const app = require('../index');
 
 describe('Comments API', () => {
-    
     describe('Health Check', () => {
         test('GET /health should return healthy status', async () => {
             const response = await request(app).get('/health');
-            
+
             expect(response.status).toBe(200);
             expect(response.body.status).toBe('healthy');
             expect(response.body.service).toBe('flask-comments-api-node');
@@ -17,7 +16,7 @@ describe('Comments API', () => {
     describe('Home endpoint', () => {
         test('GET / should return API information', async () => {
             const response = await request(app).get('/');
-            
+
             expect(response.status).toBe(200);
             expect(response.body.message).toContain('Flask Comments API');
             expect(response.body.version).toBe('1.0.0');
@@ -30,7 +29,7 @@ describe('Comments API', () => {
 
         test('GET /api/comments should return empty array initially', async () => {
             const response = await request(app).get('/api/comments');
-            
+
             expect(response.status).toBe(200);
             expect(response.body.data).toBeInstanceOf(Array);
             expect(response.body.total).toBeDefined();
@@ -39,20 +38,20 @@ describe('Comments API', () => {
         test('POST /api/comments should create a new comment', async () => {
             const newComment = {
                 author: 'Test User',
-                content: 'This is a test comment'
+                content: 'This is a test comment',
             };
 
             const response = await request(app)
                 .post('/api/comments')
                 .send(newComment);
-            
+
             expect(response.status).toBe(201);
             expect(response.body.message).toBe('Comment created successfully');
             expect(response.body.data).toBeDefined();
             expect(response.body.data.author).toBe(newComment.author);
             expect(response.body.data.content).toBe(newComment.content);
             expect(response.body.data.id).toBeDefined();
-            
+
             commentId = response.body.data.id;
         });
 
@@ -77,8 +76,10 @@ describe('Comments API', () => {
         });
 
         test('GET /api/comments/:id should return specific comment', async () => {
-            const response = await request(app).get(`/api/comments/${commentId}`);
-            
+            const response = await request(app).get(
+                `/api/comments/${commentId}`
+            );
+
             expect(response.status).toBe(200);
             expect(response.body.data).toBeDefined();
             expect(response.body.data.id).toBe(commentId);
@@ -86,32 +87,36 @@ describe('Comments API', () => {
 
         test('GET /api/comments/:id should return 404 for non-existent comment', async () => {
             const response = await request(app).get('/api/comments/999999');
-            
+
             expect(response.status).toBe(404);
             expect(response.body.error).toBe('Not found');
         });
 
         test('GET /api/comments/:id should return 400 for invalid ID', async () => {
             const response = await request(app).get('/api/comments/invalid-id');
-            
+
             expect(response.status).toBe(400);
             expect(response.body.error).toBe('Validation error');
         });
 
         test('DELETE /api/comments/:id should delete comment', async () => {
-            const response = await request(app).delete(`/api/comments/${commentId}`);
-            
+            const response = await request(app).delete(
+                `/api/comments/${commentId}`
+            );
+
             expect(response.status).toBe(200);
             expect(response.body.message).toContain('deleted successfully');
 
             //Verify comment is deleted
-            const getResponse = await request(app).get(`/api/comments/${commentId}`);
+            const getResponse = await request(app).get(
+                `/api/comments/${commentId}`
+            );
             expect(getResponse.status).toBe(404);
         });
 
         test('DELETE /api/comments/:id should return 404 for non-existent comment', async () => {
             const response = await request(app).delete('/api/comments/999999');
-            
+
             expect(response.status).toBe(404);
             expect(response.body.error).toBe('Not found');
         });
@@ -120,7 +125,7 @@ describe('Comments API', () => {
     describe('API Documentation', () => {
         test('GET /api/docs should return API documentation', async () => {
             const response = await request(app).get('/api/docs');
-            
+
             expect(response.status).toBe(200);
             expect(response.body.title).toContain('Comments API Documentation');
             expect(response.body.endpoints).toBeInstanceOf(Array);
@@ -130,7 +135,7 @@ describe('Comments API', () => {
     describe('Error Handling', () => {
         test('Should return 404 for non-existent routes', async () => {
             const response = await request(app).get('/non-existent-route');
-            
+
             expect(response.status).toBe(404);
             expect(response.body.error).toBe('Route not found');
         });

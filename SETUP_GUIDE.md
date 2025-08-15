@@ -13,12 +13,12 @@
 
 ### 📊 **Comparación de Performance:**
 
-| Métrica | Node.js + Vercel | Python + Google Cloud |
-|---------|------------------|------------------------|
-| Cold Start | ~50ms | ~2-3 segundos |
-| Costo mensual | $0 (hasta 100GB) | ~$5-10 |
-| Setup time | 5 minutos | 30-45 minutos |
-| Configuración | Zero-config | Compleja |
+| Métrica       | Node.js + Vercel | Python + Google Cloud |
+| ------------- | ---------------- | --------------------- |
+| Cold Start    | ~50ms            | ~2-3 segundos         |
+| Costo mensual | $0 (hasta 100GB) | ~$5-10                |
+| Setup time    | 5 minutos        | 30-45 minutos         |
+| Configuración | Zero-config      | Compleja              |
 
 ---
 
@@ -81,6 +81,7 @@ npm test
 #### 3. **Variables de entorno (opcional)**
 
 En el dashboard de Vercel:
+
 - **Settings** → **Environment Variables**
 - Agregar si necesitas: `NODE_ENV=production`
 
@@ -118,6 +119,7 @@ Si quieres control total del pipeline:
 Ve a tu repositorio → **Settings** → **Secrets and variables** → **Actions**
 
 Agregar estos secrets:
+
 - `VERCEL_TOKEN`: Token de Vercel (desde vercel.com/account/tokens)
 - `VERCEL_ORG_ID`: ID de tu organización
 - `VERCEL_PROJECT_ID`: ID del proyecto
@@ -218,18 +220,20 @@ app.use(express.json({ limit: '10mb' })); //Request size limit
 ## 🚨 Troubleshooting Común
 
 ### **Error: "Function not found"**
+
 ```json
 //Verificar vercel.json
 {
-  "functions": {
-    "index.js": {
-      "maxDuration": 10
+    "functions": {
+        "index.js": {
+            "maxDuration": 10
+        }
     }
-  }
 }
 ```
 
 ### **Error: "Module not found"**
+
 ```powershell
 # Reinstalar dependencias
 rm -rf node_modules package-lock.json
@@ -237,13 +241,15 @@ npm install
 ```
 
 ### **Error: "Database access"**
+
 - SQLite funciona en Vercel pero no persiste entre requests
 - Para producción, considera usar:
-  - **Vercel Postgres** (recomendado)
-  - **PlanetScale** (MySQL)
-  - **Supabase** (PostgreSQL)
+    - **Vercel Postgres** (recomendado)
+    - **PlanetScale** (MySQL)
+    - **Supabase** (PostgreSQL)
 
 ### **Performance lenta**
+
 - Verificar que no hay imports innecesarios
 - Optimizar queries de base de datos
 - Usar cache headers apropiados
@@ -303,15 +309,15 @@ app.use('/api', auth());
 
 ## 🆚 Comparación Final: Node.js vs Python
 
-| Criterio | Node.js + Vercel | Python + Google Cloud |
-|----------|------------------|------------------------|
-| **Setup time** | ⚡ 5 min | 🐌 45 min |
-| **Performance** | ⚡ ~50ms cold start | 🐌 ~2-3s cold start |
-| **Costos** | 💚 $0/mes inicial | 💛 ~$5-10/mes |
-| **Mantenimiento** | 💚 Minimal | 💛 Moderado |
-| **Escalabilidad** | 💚 Auto | 💚 Auto |
-| **Learning curve** | 💚 Fácil | 💛 Moderado |
-| **Ecosystem** | 💚 Rico (NPM) | 💚 Rico (PyPI) |
+| Criterio           | Node.js + Vercel    | Python + Google Cloud |
+| ------------------ | ------------------- | --------------------- |
+| **Setup time**     | ⚡ 5 min            | 🐌 45 min             |
+| **Performance**    | ⚡ ~50ms cold start | 🐌 ~2-3s cold start   |
+| **Costos**         | 💚 $0/mes inicial   | 💛 ~$5-10/mes         |
+| **Mantenimiento**  | 💚 Minimal          | 💛 Moderado           |
+| **Escalabilidad**  | 💚 Auto             | 💚 Auto               |
+| **Learning curve** | 💚 Fácil            | 💛 Moderado           |
+| **Ecosystem**      | 💚 Rico (NPM)       | 💚 Rico (PyPI)        |
 
 **🏆 Winner: Node.js + Vercel** para este proyecto específico.
 

@@ -16,23 +16,26 @@ Una API RESTful desarrollada con **Node.js + Express** para gestionar comentario
 
 ## ⚡ ¿Por qué Node.js + Vercel?
 
-| Ventaja | Node.js + Vercel | Python + Google Cloud |
-|---------|------------------|------------------------|
-| **Cold Start** | ~50ms | ~2-3 segundos |
-| **Costo** | $0/mes | ~$5-10/mes |
-| **Setup** | 5 minutos | 45 minutos |
-| **Mantenimiento** | Mínimo | Moderado |
+| Ventaja           | Node.js + Vercel | Python + Google Cloud |
+| ----------------- | ---------------- | --------------------- |
+| **Cold Start**    | ~50ms            | ~2-3 segundos         |
+| **Costo**         | $0/mes           | ~$5-10/mes            |
+| **Setup**         | 5 minutos        | 45 minutos            |
+| **Mantenimiento** | Mínimo           | Moderado              |
 
 ## 📋 Endpoints
 
 ### Health Check
+
 - `GET /health` - Verificar estado de la API
 
 ### API Info
+
 - `GET /` - Información general de la API
 - `GET /api/docs` - Documentación de endpoints
 
 ### Comentarios
+
 - `GET /api/comments` - Obtener todos los comentarios
 - `POST /api/comments` - Crear un nuevo comentario
 - `GET /api/comments/{id}` - Obtener un comentario específico
@@ -59,23 +62,27 @@ curl -X DELETE https://tu-app.vercel.app/api/comments/1
 ## 🛠️ Desarrollo Local
 
 ### Requisitos
-- Node.js 18+ 
+
+- Node.js 18+
 - npm o yarn
 
 ### Instalación
 
 1. Clonar el repositorio:
+
 ```bash
 git clone <tu-repositorio>
 cd flask-comments-api
 ```
 
 2. Instalar dependencias:
+
 ```bash
 npm install
 ```
 
 3. Ejecutar la aplicación:
+
 ```bash
 npm start
 ```
@@ -115,10 +122,10 @@ npm start
 ### Opción 1: Despliegue Automático (Recomendado)
 
 1. **Conectar a Vercel**:
-   - Ve a [vercel.com](https://vercel.com)
-   - Conecta tu cuenta de GitHub
-   - Import el repositorio
-   - ¡Deploy automático! 🎉
+    - Ve a [vercel.com](https://vercel.com)
+    - Conecta tu cuenta de GitHub
+    - Import el repositorio
+    - ¡Deploy automático! 🎉
 
 2. **URL disponible**: `https://tu-proyecto.vercel.app`
 
@@ -138,6 +145,7 @@ vercel --prod
 ### Configuración de CI/CD
 
 Ver archivo `.github/workflows/vercel-deploy.yml` para pipeline completo con:
+
 - Testing automático
 - Deploy previews en PRs
 - Deploy a producción en main
@@ -168,6 +176,7 @@ flask-comments-api/
 ## 🧪 Testing
 
 ### Testing Local
+
 ```bash
 # Iniciar servidor
 npm start
@@ -178,6 +187,7 @@ npm start
 ```
 
 ### Testing en Producción
+
 ```bash
 # Probar con URL de Vercel
 ./test_api.bat https://tu-app.vercel.app
@@ -195,12 +205,14 @@ npm start
 ### Variables de Entorno
 
 En Vercel Dashboard → Settings → Environment Variables:
+
 - `NODE_ENV=production`
 - `DATABASE_URL=<tu-db-url>` (para DB externa)
 
 ### Base de Datos Persistente
 
 Para producción, migrar a:
+
 - **Vercel Postgres** (recomendado)
 - **PlanetScale** (MySQL)
 - **Supabase** (PostgreSQL)
