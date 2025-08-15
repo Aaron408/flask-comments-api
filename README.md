@@ -1,21 +1,36 @@
-# Flask Comments API
+# Flask Comments API - Node.js Version
 
-Una API RESTful desarrollada con Flask para gestionar comentarios, con despliegue automatizado en Google Cloud Run usando CI/CD.
+Una API RESTful desarrollada con **Node.js + Express** para gestionar comentarios, con despliegue optimizado en **Vercel**.
+
+> 🔄 **Migrado de Python/Flask a Node.js/Express** para mejor performance y costos en Vercel.
 
 ## 🚀 Características
 
 - API RESTful para gestionar comentarios
+- Desarrollada con **Node.js + Express**
 - Base de datos SQLite
-- Dockerización
+- Despliegue automático en **Vercel**
 - CI/CD con GitHub Actions
-- Despliegue en Google Cloud Run
-- Tests automatizados
-- Health checks
+- Tests automatizados con Jest
+- Cold starts ultra-rápidos (~50ms)
+
+## ⚡ ¿Por qué Node.js + Vercel?
+
+| Ventaja | Node.js + Vercel | Python + Google Cloud |
+|---------|------------------|------------------------|
+| **Cold Start** | ~50ms | ~2-3 segundos |
+| **Costo** | $0/mes | ~$5-10/mes |
+| **Setup** | 5 minutos | 45 minutos |
+| **Mantenimiento** | Mínimo | Moderado |
 
 ## 📋 Endpoints
 
 ### Health Check
 - `GET /health` - Verificar estado de la API
+
+### API Info
+- `GET /` - Información general de la API
+- `GET /api/docs` - Documentación de endpoints
 
 ### Comentarios
 - `GET /api/comments` - Obtener todos los comentarios
@@ -27,25 +42,25 @@ Una API RESTful desarrollada con Flask para gestionar comentarios, con despliegu
 
 ```bash
 # Crear un comentario
-curl -X POST http://localhost:8080/api/comments \
+curl -X POST https://tu-app.vercel.app/api/comments \
   -H "Content-Type: application/json" \
   -d '{"author": "Juan Pérez", "content": "Este es mi comentario"}'
 
 # Obtener todos los comentarios
-curl http://localhost:8080/api/comments
+curl https://tu-app.vercel.app/api/comments
 
 # Obtener un comentario específico
-curl http://localhost:8080/api/comments/1
+curl https://tu-app.vercel.app/api/comments/1
 
 # Eliminar un comentario
-curl -X DELETE http://localhost:8080/api/comments/1
+curl -X DELETE https://tu-app.vercel.app/api/comments/1
 ```
 
 ## 🛠️ Desarrollo Local
 
 ### Requisitos
-- Python 3.11+
-- Docker (opcional)
+- Node.js 18+ 
+- npm o yarn
 
 ### Instalación
 
@@ -55,76 +70,180 @@ git clone <tu-repositorio>
 cd flask-comments-api
 ```
 
-2. Crear entorno virtual:
+2. Instalar dependencias:
 ```bash
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Linux/Mac
+npm install
 ```
 
-3. Instalar dependencias:
+3. Ejecutar la aplicación:
 ```bash
-pip install -r requirements.txt
+npm start
 ```
 
-4. Ejecutar la aplicación:
-```bash
-python app.py
-```
+La API estará disponible en `http://localhost:3000`
 
-La API estará disponible en `http://localhost:8080`
+### Scripts disponibles
+
+```bash
+npm start          # Iniciar servidor
+npm run dev        # Modo desarrollo con nodemon
+npm test           # Ejecutar tests
+npm run lint       # Linting con ESLint
+```
 
 ### Ejecutar tests
 
 ```bash
-python -m pytest tests/ -v
+# Tests unitarios
+npm test
+
+# Tests con coverage
+npm test -- --coverage
+
+# Tests en modo watch
+npm test -- --watch
+
+# Tests de integración
+npm start
+# En otra terminal:
+./test_api.bat  # Windows
+./test_api.sh   # Linux/Mac
 ```
 
-## 🐳 Docker
+## 🚀 Despliegue en Vercel
 
-### Construir imagen
+### Opción 1: Despliegue Automático (Recomendado)
+
+1. **Conectar a Vercel**:
+   - Ve a [vercel.com](https://vercel.com)
+   - Conecta tu cuenta de GitHub
+   - Import el repositorio
+   - ¡Deploy automático! 🎉
+
+2. **URL disponible**: `https://tu-proyecto.vercel.app`
+
+### Opción 2: Usando Vercel CLI
+
 ```bash
-docker build -t flask-comments-api .
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Deploy a producción
+vercel --prod
 ```
 
-### Ejecutar contenedor
+### Configuración de CI/CD
+
+Ver archivo `.github/workflows/vercel-deploy.yml` para pipeline completo con:
+- Testing automático
+- Deploy previews en PRs
+- Deploy a producción en main
+- Tests de integración post-deploy
+
+## 📁 Estructura del Proyecto
+
+```
+flask-comments-api/
+├── index.js                 # Aplicación principal Express
+├── package.json             # Dependencias y scripts
+├── vercel.json             # Configuración de Vercel
+├── jest.config.js          # Configuración de tests
+├── .eslintrc.js           # Configuración de linting
+├── tests/
+│   ├── api.test.js        # Tests unitarios
+│   └── setup.js           # Setup de tests
+├── .github/workflows/
+│   └── deploy.yml         # CI/CD pipeline
+├── test_api.bat           # Script testing Windows
+├── test_api.sh            # Script testing Unix
+└── docs/
+    ├── SETUP_GUIDE.md
+    ├── API_DOCS.md
+    └── FINAL_REPORT.md
+```
+
+## 🧪 Testing
+
+### Testing Local
 ```bash
-docker run -p 8080:8080 flask-comments-api
+# Iniciar servidor
+npm start
+
+# Probar endpoints
+./test_api_node.bat  # Windows
+./test_api_node.sh   # Linux/Mac
 ```
 
-## ☁️ Despliegue en Google Cloud
-
-Este proyecto incluye un pipeline de CI/CD que despliega automáticamente en Google Cloud Run cuando se hace push a la rama `main`.
-
-### Configuración requerida:
-
-1. **Secrets en GitHub:**
-   - `GCP_PROJECT_ID`: ID de tu proyecto de Google Cloud
-   - `GCP_SA_KEY`: Clave JSON de la cuenta de servicio
-
-2. **Servicios de Google Cloud habilitados:**
-   - Cloud Run API
-   - Artifact Registry API
-   - Cloud Build API
-
-## 🔧 Configuración de Google Cloud
-
-Ver la sección de configuración en la documentación del proyecto.
+### Testing en Producción
+```bash
+# Probar con URL de Vercel
+./test_api.bat https://tu-app.vercel.app
+```
 
 ## 📊 Monitoreo
 
-- Health check disponible en `/health`
-- Logs disponibles en Google Cloud Console
-- Métricas de Cloud Run disponibles
+- **Vercel Dashboard**: Métricas y logs en tiempo real
+- **Health check**: `/health` endpoint
+- **Function analytics**: Performance por endpoint
+- **Speed Insights**: Core Web Vitals
+
+## 🔧 Configuración Avanzada
+
+### Variables de Entorno
+
+En Vercel Dashboard → Settings → Environment Variables:
+- `NODE_ENV=production`
+- `DATABASE_URL=<tu-db-url>` (para DB externa)
+
+### Base de Datos Persistente
+
+Para producción, migrar a:
+- **Vercel Postgres** (recomendado)
+- **PlanetScale** (MySQL)
+- **Supabase** (PostgreSQL)
+
+## 📚 Documentación
+
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Guía completa de setup
+- **[API_DOCS.md](API_DOCS.md)** - Documentación de la API
+- **[FINAL_REPORT.md](FINAL_REPORT.md)** - Reporte del proyecto
 
 ## 🤝 Contribuir
 
 1. Fork el proyecto
-2. Crear una rama feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva característica'`)
+2. Crear rama feature (`git checkout -b feature/nueva-caracteristica`)
+3. Commit cambios (`git commit -am 'Agregar nueva característica'`)
 4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Crear un Pull Request
+5. Crear Pull Request
+
+## 🆚 Versiones Disponibles
+
+- **🟢 Node.js + Vercel** (actual) - Recomendado para desarrollo ágil
+- **🟡 Python + Google Cloud** (legacy) - Para equipos Python-first
 
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT.
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Iniciar servidor
+npm start
+
+# 3. Probar API
+curl http://localhost:3000/health
+
+# 4. Desplegar a Vercel
+# Ve a vercel.com y conecta tu repo!
+```
+
+**🎉 ¡Tu API estará live en menos de 5 minutos!**

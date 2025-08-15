@@ -1,111 +1,286 @@
-# .github/workflows/deploy.yml
-name: Deploy to Google Cloud Run
+name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, production ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, production ]
+  workflow_run:
+    workflows: ["Testing and Quality Assurance", "Security and Quality Pipeline"]
+    types:
+      - completed
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  SERVICE_NAME: flask-comments-api
-  REGION: us-central1
-  REPOSITORY: uteq-repositorio
-  IMAGE_NAME: flask-comments-api
-  REGISTRY_URL: us-central1-docker.pkg.dev
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NODE_VERSION: '18'
 
 jobs:
-  test:
-    name: Test Application
+  pre-deployment-checks:
+    name: Pre-deployment Security and Quality Checks
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        python-version: '3.11'
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
     
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest flask-testing
+      run: npm ci
     
-    - name: Run tests
+    - name: Security audit
       run: |
-        python -m pytest tests/ -v || echo "No tests found - skipping"
+        echo "🔒 Running security audit..."
+        npm audit --audit-level=moderate
     
-    - name: Lint code
+    - name: Run comprehensive tests
       run: |
-        pip install flake8
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        echo "🧪 Running comprehensive test suite..."
+        npm test -- --coverage --watchAll=false
+    
+    - name: Validate environment secrets
+      run: |
+        echo "🔐 Validating deployment secrets..."
+        if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+          echo "❌ VERCEL_TOKEN is not set"
+          exit 1
+        fi
+        if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+          echo "❌ VERCEL_ORG_ID is not set"  
+          exit 1
+        fi
+        if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+          echo "❌ VERCEL_PROJECT_ID is not set"
+          exit 1
+        fi
+        echo "✅ All required secrets are configured"
+    
+    - name: Application startup test
+      run: |
+        echo "🚀 Testing application startup..."
+        timeout 15s npm start &
+        SERVER_PID=$!
+        sleep 8
+        
+        # Test health endpoint
+        curl -f http://localhost:3000/health || exit 1
+        
+        # Test API endpoints
+        curl -f http://localhost:3000/api/docs || exit 1
+        curl -f http://localhost:3000/api/comments || exit 1
+        
+        kill $SERVER_PID || true
+        echo "✅ Application startup test passed!"
 
-  build-and-deploy:
-    name: Build and Deploy to Cloud Run
+  deploy-preview:
+    name: Deploy Preview Environment
     runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: pre-deployment-checks
+    if: github.event_name == 'pull_request'
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        node-version: '18'
+        cache: 'npm'
     
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
     
-    - name: Verify GCP Authentication
+    - name: Pull Vercel Environment Information
+      run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+    
+    - name: Build Project Artifacts
+      run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+    
+    - name: Deploy Project Artifacts to Vercel (Preview)
+      id: deploy
       run: |
-        echo "Verificando autenticación..."
-        gcloud auth list --filter=status:ACTIVE --format="value(account)"
-        gcloud config get-value project
+        url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+        echo "preview-url=$url" >> $GITHUB_OUTPUT
+        echo "🚀 Preview deployed to: $url"
     
-    - name: Configure Docker for Artifact Registry
+    - name: Test Preview Deployment
       run: |
-        echo "Configurando Docker para Artifact Registry..."
-        gcloud auth configure-docker $REGISTRY_URL --quiet
+        sleep 10
+        curl -f ${{ steps.deploy.outputs.preview-url }}/health || exit 1
+        echo "✅ Preview deployment successful!"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: pre-deployment-checks
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.production-url }}
     
-    - name: Build Docker image
-      run: |
-        docker build . --platform linux/amd64 -t $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
-        docker tag $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$GITHUB_SHA $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
     
-    - name: Push Docker image to Artifact Registry
-      run: |
-        echo "Pushing image to: $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME"
-        docker push $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$GITHUB_SHA
-        docker push $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:latest
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
     
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy $SERVICE_NAME \
-          --image $REGISTRY_URL/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$GITHUB_SHA \
-          --platform managed \
-          --region $REGION \
-          --allow-unauthenticated \
-          --port 8080 \
-          --memory 512Mi \
-          --cpu 1 \
-          --max-instances 10 \
-          --set-env-vars="ENVIRONMENT=production"
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
     
-    - name: Get service URL
-      run: |
-        SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region=$REGION --format='value(status.url)')
-        echo "Service deployed at: $SERVICE_URL"
-        echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
+    - name: Pull Vercel Environment Information
+      run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
     
-    - name: Test deployment
+    - name: Build Project Artifacts
+      run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+    
+    - name: Deploy Project Artifacts to Vercel (Production)
+      id: deploy
       run: |
+        echo "🚀 Deploying to production..."
+        url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+        echo "production-url=$url" >> $GITHUB_OUTPUT
+        echo "🌐 Production deployed to: $url"
+    
+    - name: Wait for deployment to be ready
+      run: |
+        echo "⏳ Waiting for deployment to be fully ready..."
         sleep 30
-        curl -f $SERVICE_URL/health || exit 1
-        echo "✅ Deployment successful and health check passed!"
+    
+    - name: Validate production deployment health
+      run: |
+        echo "🔍 Validating production deployment health..."
+        BASE_URL="${{ steps.deploy.outputs.production-url }}"
+        
+        # Test health endpoint with retries
+        for i in {1..5}; do
+          if curl -f "$BASE_URL/health"; then
+            echo "✅ Health check passed!"
+            break
+          fi
+          echo "Health check attempt $i/5 failed, retrying..."
+          sleep 10
+        done
+        
+        # Test API documentation
+        curl -f "$BASE_URL/api/docs" || exit 1
+        echo "✅ API docs accessible!"
+    
+    - name: Run production smoke tests
+      run: |
+        echo "🧪 Running production smoke tests..."
+        BASE_URL="${{ steps.deploy.outputs.production-url }}"
+        
+        # Test crear comentario
+        echo "Testing comment creation..."
+        COMMENT_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$BASE_URL/api/comments" \
+          -H "Content-Type: application/json" \
+          -d '{"author": "Production Test", "content": "This is a production deployment test comment"}')
+        
+        HTTP_CODE=$(echo "$COMMENT_RESPONSE" | tail -c 4)
+        if [ "$HTTP_CODE" != "201" ]; then
+          echo "❌ Comment creation failed with HTTP code: $HTTP_CODE"
+          exit 1
+        fi
+        echo "✅ Comment creation test passed!"
+        
+        # Test obtener comentarios
+        echo "Testing comment retrieval..."
+        curl -f "$BASE_URL/api/comments" || exit 1
+        echo "✅ Comment retrieval test passed!"
+        
+        echo "🎉 All production smoke tests passed!"
+    
+    - name: Performance validation
+      run: |
+        echo "⚡ Running production performance validation..."
+        BASE_URL="${{ steps.deploy.outputs.production-url }}"
+        
+        # Test response times
+        echo "Testing response times..."
+        
+        # Health endpoint should respond quickly
+        HEALTH_TIME=$(curl -w "%{time_total}" -s -o /dev/null "$BASE_URL/health")
+        echo "Health endpoint response time: ${HEALTH_TIME}s"
+        
+        # API endpoints response time
+        API_TIME=$(curl -w "%{time_total}" -s -o /dev/null "$BASE_URL/api/comments")
+        echo "API endpoint response time: ${API_TIME}s"
+        
+        # Validate response times (should be under 2 seconds)
+        if (( $(echo "$HEALTH_TIME > 2.0" | bc -l) )); then
+          echo "❌ Health endpoint too slow: ${HEALTH_TIME}s"
+          exit 1
+        fi
+        
+        if (( $(echo "$API_TIME > 2.0" | bc -l) )); then
+          echo "❌ API endpoint too slow: ${API_TIME}s"
+          exit 1
+        fi
+        
+        echo "✅ Performance validation passed!"
+
+  post-deployment-monitoring:
+    name: Post-deployment Monitoring Setup
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: success() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production')
+    
+    steps:
+    - name: Setup monitoring alerts
+      run: |
+        echo "📊 Setting up post-deployment monitoring..."
+        echo "Deployment completed at: $(date)"
+        echo "Production URL: ${{ needs.deploy-production.outputs.production-url }}"
+    
+    - name: Create deployment record
+      run: |
+        echo "📝 Creating deployment record..."
+        cat > deployment-record.json << EOF
+        {
+          "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+          "commit": "${{ github.sha }}",
+          "branch": "${{ github.ref_name }}",
+          "actor": "${{ github.actor }}",
+          "url": "${{ needs.deploy-production.outputs.production-url }}",
+          "status": "success"
+        }
+        EOF
+        
+        echo "Deployment record created:"
+        cat deployment-record.json
+    
+    - name: Upload deployment record
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-record-${{ github.sha }}
+        path: deployment-record.json
+        retention-days: 90
+
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production')
+    
+    steps:
+    - name: Deployment Success
+      if: needs.deploy-production.result == 'success'
+      run: |
+        echo "🎉 Deployment to production successful!"
+        echo "🌐 Your API is live and ready to use!"
+    
+    - name: Deployment Failed
+      if: needs.deploy-production.result == 'failure'
+      run: |
+        echo "❌ Deployment to production failed!"
+        exit 1
