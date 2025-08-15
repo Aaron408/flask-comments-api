@@ -2,9 +2,9 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, production ]
+    branches: [ production ]
   pull_request:
-    branches: [ main, production ]
+    branches: [ production ]
   workflow_run:
     workflows: ["Testing and Quality Assurance", "Security and Quality Pipeline"]
     types:
@@ -119,7 +119,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: pre-deployment-checks
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/production'
     environment:
       name: production
       url: ${{ steps.deploy.outputs.production-url }}
@@ -233,7 +233,7 @@ jobs:
     name: Post-deployment Monitoring Setup
     runs-on: ubuntu-latest
     needs: deploy-production
-    if: success() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production')
+    if: success() && github.ref == 'refs/heads/production'
     
     steps:
     - name: Setup monitoring alerts
@@ -270,7 +270,7 @@ jobs:
     name: Notify Deployment Status
     runs-on: ubuntu-latest
     needs: [deploy-production]
-    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production')
+    if: always() && github.ref == 'refs/heads/production'
     
     steps:
     - name: Deployment Success
