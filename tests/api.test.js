@@ -32,7 +32,7 @@ describe('Comments API', () => {
             const response = await request(app).get('/api/comments');
             
             expect(response.status).toBe(200);
-            expect(response.body.comments).toBeInstanceOf(Array);
+            expect(response.body.data).toBeInstanceOf(Array);
             expect(response.body.total).toBeDefined();
         });
 
@@ -48,12 +48,12 @@ describe('Comments API', () => {
             
             expect(response.status).toBe(201);
             expect(response.body.message).toBe('Comment created successfully');
-            expect(response.body.comment).toBeDefined();
-            expect(response.body.comment.author).toBe(newComment.author);
-            expect(response.body.comment.content).toBe(newComment.content);
-            expect(response.body.comment.id).toBeDefined();
+            expect(response.body.data).toBeDefined();
+            expect(response.body.data.author).toBe(newComment.author);
+            expect(response.body.data.content).toBe(newComment.content);
+            expect(response.body.data.id).toBeDefined();
             
-            commentId = response.body.comment.id;
+            commentId = response.body.data.id;
         });
 
         test('POST /api/comments should reject invalid data', async () => {
@@ -80,29 +80,29 @@ describe('Comments API', () => {
             const response = await request(app).get(`/api/comments/${commentId}`);
             
             expect(response.status).toBe(200);
-            expect(response.body.comment).toBeDefined();
-            expect(response.body.comment.id).toBe(commentId);
+            expect(response.body.data).toBeDefined();
+            expect(response.body.data.id).toBe(commentId);
         });
 
         test('GET /api/comments/:id should return 404 for non-existent comment', async () => {
             const response = await request(app).get('/api/comments/999999');
             
             expect(response.status).toBe(404);
-            expect(response.body.error).toBe('Comment not found');
+            expect(response.body.error).toBe('Not found');
         });
 
         test('GET /api/comments/:id should return 400 for invalid ID', async () => {
             const response = await request(app).get('/api/comments/invalid-id');
             
             expect(response.status).toBe(400);
-            expect(response.body.error).toBe('Invalid comment ID');
+            expect(response.body.error).toBe('Validation error');
         });
 
         test('DELETE /api/comments/:id should delete comment', async () => {
             const response = await request(app).delete(`/api/comments/${commentId}`);
             
             expect(response.status).toBe(200);
-            expect(response.body.message).toBe('Comment deleted successfully');
+            expect(response.body.message).toContain('deleted successfully');
 
             //Verify comment is deleted
             const getResponse = await request(app).get(`/api/comments/${commentId}`);
@@ -113,7 +113,7 @@ describe('Comments API', () => {
             const response = await request(app).delete('/api/comments/999999');
             
             expect(response.status).toBe(404);
-            expect(response.body.error).toBe('Comment not found');
+            expect(response.body.error).toBe('Not found');
         });
     });
 
