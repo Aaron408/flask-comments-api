@@ -5,10 +5,6 @@ on:
     branches: [ production ]
   pull_request:
     branches: [ production ]
-  workflow_run:
-    workflows: ["Testing and Quality Assurance", "Security and Quality Pipeline"]
-    types:
-      - completed
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -247,7 +243,7 @@ jobs:
         cat deployment-record.json
     
     - name: Upload deployment record
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: deployment-record-${{ github.sha }}
         path: deployment-record.json
