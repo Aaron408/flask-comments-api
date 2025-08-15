@@ -7,28 +7,22 @@
 2. Haz clic en **"Settings"** (pestaña del repositorio)
 3. En el menú lateral, haz clic en **"Branches"**
 
-### **2. Configurar Protección para `main`**
+### **2. Configurar Protección para `main` (Desarrollo Ágil)**
 
 Haz clic en **"Add rule"** y configura:
 
 #### **Branch name pattern:** `main`
 
-#### **✅ Configuraciones Recomendadas:**
-- ✅ **Require a pull request before merging**
-  - ✅ Require approvals: `1`
-  - ✅ Dismiss stale PR approvals when new commits are pushed
-  - ✅ Require review from code owners
-
+#### **✅ Configuraciones Simplificadas:**
+- ❌ **NO requerir pull requests** (para desarrollo ágil)
 - ✅ **Require status checks to pass before merging**
-  - ✅ Require branches to be up to date before merging
   - ✅ Status checks required: 
     - `Security Vulnerability Scan`
     - `Unit Tests`
     - `Integration Tests`
-    - `Pre-deployment Security and Quality Checks`
 
-- ✅ **Require conversation resolution before merging**
-- ✅ **Include administrators**
+- ✅ **Allow force pushes** (para casos de emergencia)
+- ❌ **NO incluir administrators** (más flexibilidad)
 
 ### **3. Configurar Protección para `production`**
 
@@ -68,42 +62,42 @@ Haz clic en **"Add rule"** nuevamente:
 Después de esta configuración:
 
 ### **Para `main` branch:**
-- ❌ No se puede hacer push directo
-- ✅ Requiere PR con 1 aprobación
-- ✅ Todos los tests deben pasar
-- ✅ Deploy automático a staging/preview
+- ✅ Se puede hacer push directo (desarrollo ágil)
+- ✅ Tests automáticos en cada push
+- ✅ Deploy automático a preview/staging
+- ✅ Protección básica con status checks
 
 ### **Para `production` branch:**
 - ❌ No se puede hacer push directo  
-- ✅ Requiere PR con 2 aprobaciones
+- ✅ Requiere PR con 1-2 aprobaciones
 - ✅ Todos los tests + security + performance deben pasar
 - ✅ Deploy automático a producción solo después de validación completa
 
 ## 📱 **Probar la Configuración:**
 
-### **Crear tu primer PR a main:**
+### **Probar el flujo simplificado:**
 ```bash
-# 1. Crear feature branch desde main
+# 1. Desarrollar directamente en main
 git checkout main
-git checkout -b feature/test-branch-protection
+git pull origin main
 
-# 2. Hacer un cambio pequeño
-echo "# Test de branch protection" >> TEST.md
-git add TEST.md
-git commit -m "feat: add test file for branch protection"
+# 2. Hacer cambios
+echo "# Test de flujo simplificado" >> README.md
+git add README.md
+git commit -m "feat: test simplified workflow"
 
-# 3. Push y crear PR
-git push origin feature/test-branch-protection
+# 3. Push directo a main
+git push origin main
 ```
 
-Luego ve a GitHub y crea un Pull Request a `main`. Deberías ver que:
+**Resultado esperado:**
 - ✅ Los workflows se ejecutan automáticamente
-- ✅ No puedes mergear hasta que pasen todos los checks
-- ✅ Necesitas aprobación para mergear
+- ✅ Se despliega a preview/staging automáticamente
+- ✅ No necesitas PR para main (desarrollo ágil)
 
-### **Crear PR de main a production:**
+### **Promover a production:**
 ```bash
-# Después de mergear el PR anterior a main:
+# Después de verificar que main funciona bien:
 # Ve a GitHub y crea un PR de main → production
 ```
 

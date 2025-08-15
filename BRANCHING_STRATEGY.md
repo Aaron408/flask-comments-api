@@ -1,22 +1,23 @@
 # 🌿 Branching Strategy y Workflow de Desarrollo
 
-## 📋 **Estructura de Ramas**
+## 📋 **Estructura de Ramas Simplificada**
 
 ### **🔄 Flujo de Ramas:**
 
 ```
-feature/nueva-funcionalidad ──→ main ──→ production
-                                 ↓           ↓
-                            [Staging]   [Producción]
+main ──────────────→ production
+  ↓                      ↓
+[Development]        [Producción]
+[Testing]            [Stable Release]
+[Preview]
 ```
 
 ### **🎯 Propósito de Cada Rama:**
 
 | Rama | Propósito | Deployment | Auto-Deploy |
 |------|-----------|------------|-------------|
-| `main` | Desarrollo y staging | Preview/Staging | ✅ Automático |
+| `main` | Desarrollo activo y testing | Preview/Staging | ✅ Automático |
 | `production` | Código estable en producción | Production | ✅ Automático |
-| `feature/*` | Desarrollo de nuevas funciones | Preview only | ✅ En PR |
 
 ## 🚀 **Workflows por Rama**
 
@@ -35,64 +36,56 @@ feature/nueva-funcionalidad ──→ main ──→ production
 5. ✅ Performance monitoring
 6. ✅ Post-deployment validation
 
-### **🔹 Pull Request a `main` o `production`:**
+### **🔹 Pull Request a `production`:**
 1. ✅ Security scan
 2. ✅ Full testing suite
 3. ✅ Preview deployment
 4. ✅ Code quality checks
 
-## 📝 **Flujo de Desarrollo Recomendado**
+## 📝 **Flujo de Desarrollo Simplificado**
 
-### **1. Para Nuevas Funcionalidades:**
+### **1. Para Desarrollo Diario (Recomendado):**
 ```bash
-# 1. Partir desde main
+# 1. Asegurar que main está actualizado
 git checkout main
 git pull origin main
 
-# 2. Crear feature branch
-git checkout -b feature/nombre-funcionalidad
-
-# 3. Desarrollar y hacer commits
+# 2. Desarrollar directamente en main
 git add .
-git commit -m "Add: nueva funcionalidad"
+git commit -m "feat: nueva funcionalidad"
 
-# 4. Push de la feature branch
-git push origin feature/nombre-funcionalidad
-
-# 5. Crear Pull Request a main en GitHub
-# 6. Después de review y merge, crear PR de main a production
-```
-
-### **2. Para Hotfixes Urgentes:**
-```bash
-# 1. Partir desde production
-git checkout production
-git pull origin production
-
-# 2. Crear hotfix branch
-git checkout -b hotfix/fix-critico
-
-# 3. Hacer el fix
-git add .
-git commit -m "Fix: descripción del problema"
-
-# 4. Push y PR directo a production
-git push origin hotfix/fix-critico
-
-# 5. Después del merge, mergear production a main
-git checkout main
-git merge production
+# 3. Push a main para testing automático
 git push origin main
+
+# 4. Verificar que tests pasen en GitHub Actions
+# 5. Si todo está bien, promover a production
 ```
 
-### **3. Para Release (Main → Production):**
+### **2. Para Release a Producción:**
 ```bash
-# 1. Asegurar que main está actualizado y probado
+# 1. Verificar que main está estable
 git checkout main
 git pull origin main
 
-# 2. Crear PR de main a production
-# 3. Después del merge, production se despliega automáticamente
+# 2. Crear Pull Request de main → production en GitHub
+# 3. El PR ejecuta todos los tests y validaciones
+# 4. Después del merge, se despliega automáticamente a producción
+```
+
+### **3. Para Hotfixes Urgentes:**
+```bash
+# 1. Trabajar directamente en main
+git checkout main
+git pull origin main
+
+# 2. Hacer el fix
+git add .
+git commit -m "fix: solución urgente"
+
+# 3. Push a main para testing
+git push origin main
+
+# 4. Si es urgente, promover inmediatamente a production
 ```
 
 ## 🎛️ **Comandos Útiles**
@@ -107,10 +100,8 @@ git pull origin main
 git checkout production
 git pull origin production
 
-# Mergear cambios de production a main (después de hotfix)
-git checkout main
-git merge production
-git push origin main
+# Ver estado de ambas ramas
+git log --oneline --graph main production
 ```
 
 ### **Ver diferencias entre ramas:**
@@ -118,83 +109,97 @@ git push origin main
 # Ver commits en main que no están en production
 git log production..main --oneline
 
-# Ver commits en production que no están en main
-git log main..production --oneline
+# Ver archivos modificados entre ramas
+git diff production...main --name-only
 ```
 
 ## 🔄 **Environments y Deployments**
 
-### **Staging Environment (main branch):**
-- **URL**: Preview URLs de Vercel
-- **Propósito**: Testing e integración
-- **Acceso**: Team y QA
+### **Development Environment (main branch):**
+- **URL**: Preview URLs de Vercel (cambian con cada push)
+- **Propósito**: Testing, desarrollo e integración
+- **Acceso**: Solo para desarrollo y testing
 
 ### **Production Environment (production branch):**
 - **URL**: https://flask-comments-api.vercel.app
 - **Propósito**: Usuarios finales
 - **Acceso**: Público
 
-## 🛡️ **Branch Protection Rules (Recomendado)**
-
-Para configurar en GitHub → Settings → Branches:
+## 🛡️ **Branch Protection Rules (Simplificadas)**
 
 ### **Para `main`:**
+- ✅ Permitir push directo (para desarrollo ágil)
+- ✅ Require status checks to pass
+- ✅ Auto-deploy to preview
+
+### **Para `production`:**  
 - ✅ Require pull request reviews
 - ✅ Require status checks to pass
 - ✅ Require up-to-date branches
 - ✅ Include administrators
 
-### **Para `production`:**  
-- ✅ Require pull request reviews (2 reviewers)
-- ✅ Require status checks to pass
-- ✅ Require up-to-date branches
-- ✅ Include administrators
-- ✅ Restrict pushes to specific people/teams
-
 ## 📊 **Monitoring y Alertas**
 
 ### **Main Branch:**
-- Tests deben pasar antes de merge
+- Tests automáticos en cada push
 - Preview deployments para validation
 - Performance baselines
+- Development notifications
 
 ### **Production Branch:**
 - Smoke tests post-deployment
 - Performance monitoring
 - Error tracking y alertas
-- Rollback automático si falla
+- Production health checks
 
-## 🎯 **Best Practices**
+## 🎯 **Best Practices Simplificadas**
 
-1. **Never push directly to production** - Siempre usar PRs
-2. **Keep main stable** - Solo mergear features completamente probadas
-3. **Use semantic commit messages** - `feat:`, `fix:`, `docs:`, etc.
-4. **Tag releases** - Para tracking de versiones
-5. **Review before merge** - Especialmente para production
+1. **Push frecuente a main** - Para testing continuo
+2. **Commits semánticos** - `feat:`, `fix:`, `docs:`, etc.
+3. **Test antes de promover** - Main debe estar siempre estable antes de ir a production
+4. **PRs solo para production** - De main → production
+5. **Monitor production** - Verificar que todo funcione después del deploy
 
 ## 🚨 **Emergency Procedures**
 
 ### **Rollback en Production:**
 ```bash
-# 1. Identificar último commit bueno
+# 1. Identificar último commit bueno en production
+git checkout production
 git log --oneline
 
-# 2. Crear hotfix branch desde ese commit
-git checkout -b hotfix/rollback <commit-hash>
+# 2. Resetear main a ese punto
+git checkout main
+git reset --hard <commit-hash-bueno>
+git push origin main --force
 
-# 3. Crear PR urgente a production
+# 3. Promover inmediatamente a production
 ```
 
 ### **Hotfix Crítico:**
 ```bash
-# 1. Fix directo en production branch
-git checkout production
-git checkout -b hotfix/critical-fix
+# 1. Fix directo en main
+git checkout main
+git add .
+git commit -m "fix: hotfix crítico"
+git push origin main
 
-# 2. Fix, commit, PR y merge inmediato
-# 3. Mergear de vuelta a main
+# 2. Verificar tests en GitHub Actions
+# 3. Promover a production inmediatamente si es crítico
 ```
+
+## 🔄 **Flujo de Trabajo Típico**
+
+### **Día a día:**
+1. **Desarrollar en main** → Automáticamente se testea y despliega a preview
+2. **Verificar en preview** → Que todo funcione correctamente
+3. **Promover a production** → Crear PR de main → production cuando esté listo
+
+### **Para releases:**
+1. **Acumular features en main** → Varias funcionalidades probadas
+2. **Testing completo** → Verificar que todo funcione en preview
+3. **Release a production** → PR de main → production con todas las features
 
 ---
 
-**🎉 ¡Con esta estructura tienes un workflow profesional y escalable!**
+**🎉 ¡Flujo simplificado y eficiente para desarrollo individual o equipos pequeños!**
