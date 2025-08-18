@@ -2,7 +2,11 @@
 
 Una API RESTful desarrollada con **Node.js + Express** para gestionar comentarios, con despliegue optimizado en **Vercel**.
 
-> 🔄 **Migrado de Python/Flask a Node.js/Express** para mejor performance y costos en Vercel.
+# Comments API - Node.js/Express
+
+� **API RESTful para gestionar comentarios** desarrollada con **Node.js y Express**.
+
+> 🎯 **Stack tecnológico moderno** optimizado para performance y costos en Vercel.
 
 ## 🚀 Características
 
@@ -16,12 +20,12 @@ Una API RESTful desarrollada con **Node.js + Express** para gestionar comentario
 
 ## ⚡ ¿Por qué Node.js + Vercel?
 
-| Ventaja           | Node.js + Vercel | Python + Google Cloud |
-| ----------------- | ---------------- | --------------------- |
-| **Cold Start**    | ~50ms            | ~2-3 segundos         |
-| **Costo**         | $0/mes           | ~$5-10/mes            |
-| **Setup**         | 5 minutos        | 45 minutos            |
-| **Mantenimiento** | Mínimo           | Moderado              |
+| Ventaja           | Node.js + Vercel | Alternativas Tradicionales |
+| ----------------- | ---------------- | --------------------------- |
+| **Cold Start**    | ~50ms            | ~2-3 segundos               |
+| **Costo**         | $0/mes           | ~$5-15/mes                  |
+| **Setup**         | 5 minutos        | 30-60 minutos               |
+| **Mantenimiento** | Mínimo           | Moderado-Alto               |
 
 ## 📋 Endpoints
 
@@ -72,7 +76,7 @@ curl -X DELETE https://tu-app.vercel.app/api/comments/1
 
 ```bash
 git clone <tu-repositorio>
-cd flask-comments-api
+cd comments-api
 ```
 
 2. Instalar dependencias:
@@ -154,7 +158,7 @@ Ver archivo `.github/workflows/vercel-deploy.yml` para pipeline completo con:
 ## 📁 Estructura del Proyecto
 
 ```
-flask-comments-api/
+comments-api/
 ├── index.js                 # Aplicación principal Express
 ├── package.json             # Dependencias y scripts
 ├── vercel.json             # Configuración de Vercel
@@ -231,10 +235,11 @@ Para producción, migrar a:
 4. Push a la rama (`git push origin feature/nueva-caracteristica`)
 5. Crear Pull Request
 
-## 🆚 Versiones Disponibles
+## 🆚 Stack Tecnológico
 
-- **🟢 Node.js + Vercel** (actual) - Recomendado para desarrollo ágil
-- **🟡 Python + Google Cloud** (legacy) - Para equipos Python-first
+- **🟢 Node.js + Express + Vercel** - Stack moderno y eficiente
+- **📱 API RESTful** - Endpoints completos para gestión de comentarios
+- **� CI/CD Automático** - GitHub Actions + Vercel
 
 ## 📝 Licencia
 

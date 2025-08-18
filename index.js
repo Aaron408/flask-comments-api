@@ -81,7 +81,7 @@ initDB();
 // Rutas
 app.get('/', (req, res) => {
     res.json({
-        message: 'Flask Comments API - Node.js Version',
+        message: 'Comments API - Node.js/Express Version',
         version: '1.0.0',
         endpoints: {
             health: '/health',
@@ -98,7 +98,7 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        service: 'flask-comments-api-node',
+        service: 'comments-api-node',
         version: '1.0.0',
     });
 });
@@ -107,7 +107,7 @@ app.get('/api/docs', (req, res) => {
     res.json({
         title: 'Comments API Documentation',
         version: '1.0.0',
-        baseUrl: 'https://flask-comments-api.vercel.app',
+        baseUrl: 'https://comments-api.vercel.app',
         endpoints: [
             {
                 method: 'GET',

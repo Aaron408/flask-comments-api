@@ -8,7 +8,7 @@ describe('Comments API', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.status).toBe('healthy');
-            expect(response.body.service).toBe('flask-comments-api-node');
+            expect(response.body.service).toBe('comments-api-node');
             expect(response.body.timestamp).toBeDefined();
         });
     });
@@ -18,7 +18,7 @@ describe('Comments API', () => {
             const response = await request(app).get('/');
 
             expect(response.status).toBe(200);
-            expect(response.body.message).toContain('Flask Comments API');
+            expect(response.body.message).toContain('Comments API');
             expect(response.body.version).toBe('1.0.0');
             expect(response.body.endpoints).toBeDefined();
         });

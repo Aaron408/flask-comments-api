@@ -25,28 +25,6 @@ Para que los pipelines de CI/CD funcionen correctamente, necesitas configurar lo
         1. Ejecuta `vercel link` en tu proyecto local
         2. El ID se encuentra en el archivo `.vercel/project.json`
 
-### Security Scanning Secrets (Opcionales)
-
-4. **SNYK_TOKEN**
-    - Descripción: Token para análisis de vulnerabilidades con Snyk
-    - Cómo obtenerlo:
-        1. Regístrate en https://snyk.io
-        2. Ve a Account Settings > General > Auth Token
-
-5. **SONAR_TOKEN**
-    - Descripción: Token para análisis de calidad de código con SonarCloud
-    - Cómo obtenerlo:
-        1. Regístrate en https://sonarcloud.io
-        2. Crea un nuevo proyecto
-        3. Genera un token de análisis
-
-6. **CODECOV_TOKEN**
-    - Descripción: Token para reportes de cobertura de código
-    - Cómo obtenerlo:
-        1. Regístrate en https://codecov.io
-        2. Conecta tu repositorio
-        3. Obtén el token del proyecto
-
 ## Configuración de Secrets en GitHub
 
 Para agregar estos secrets:
@@ -72,20 +50,3 @@ El pipeline automáticamente configura estas variables:
 3. **Rota los tokens regularmente**
 4. **Limita los permisos de los tokens al mínimo necesario**
 5. **Monitorea el uso de los secrets**
-
-## Troubleshooting
-
-### Error: "VERCEL_TOKEN is not set"
-
-- Verifica que hayas agregado el secret correctamente
-- Asegúrate de que el nombre sea exactamente `VERCEL_TOKEN`
-
-### Error: "Failed to authenticate with Vercel"
-
-- Verifica que el token no haya expirado
-- Regenera el token si es necesario
-
-### Error: "Project not found"
-
-- Verifica que `VERCEL_ORG_ID` y `VERCEL_PROJECT_ID` sean correctos
-- Ejecuta `vercel link` localmente para obtener los IDs correctos

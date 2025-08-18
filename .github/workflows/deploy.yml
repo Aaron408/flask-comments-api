@@ -262,7 +262,7 @@ jobs:
         echo "════════════════════════════════════════════════════════════════"
         echo "🎉 ✅ DEPLOYMENT SUCCESSFUL! ✅ 🎉"
         echo "════════════════════════════════════════════════════════════════"
-        echo "🌐 Your Flask Comments API is now LIVE and ready to use!"
+        echo "🌐 Your Comments API is now LIVE and ready to use!"
         echo "📅 Deployed at: $(date)"
         echo "🔗 Check your Vercel dashboard for the live URL"
         echo "🚀 All systems operational!"
